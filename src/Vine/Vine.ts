@@ -6,6 +6,7 @@ import { MAXSTALKCHANCE, vineOrientation,
 		 coord } from '../__types__/vine_types';
 import { settings, stalk } from '../__types__/parameter_types';
 import { plotSine } from './Calculations';
+
 export default class Vine {
 	stalks:Array<VineStalk>;
 	numOfSides:number;
@@ -27,8 +28,8 @@ export default class Vine {
 	numOfCurves:number;
 	startPos?:coord;
 	orientation?:vineOrientation;
+	currentPoint:coord;
 	points:Array<coord>;
-
 
 	constructor(parameters:settings)
 	{	
@@ -52,8 +53,13 @@ export default class Vine {
 		this.stalkTimeMin = parameters.stalk!.timeMin as number;
 		this.points = new Array<coord>();
 		this.segmentNum = 0;
-		this.timeline = gsap.timeline({onUpdate: () => { this.update(); }, onComplete: () => { this.complete(); } });
+		this.timeline = gsap.timeline({duration:this.segmentDuration, 
+									   onUpdate: () => { this.update(); }, 
+									   onComplete: () => { this.complete(); } 
+									 });
 		this.p2d = new Path2D();
+		this.currentPoint = this.startPos as coord;
+
 		//calculate startpos and orientation
 		switch (parameters.vine!.startCorner)
 		{
@@ -86,6 +92,7 @@ export default class Vine {
 				break;
 			}
 		}
+		console.log("hey " + this.startPos!.x + " : " + this.startPos!.y);
 		if (parameters.vine!.timing!.autoStart as boolean) this.play();
 	}
 
@@ -102,28 +109,30 @@ export default class Vine {
 
 	update()
 	{  
-		let here = plotSine(this.timeline!.progress(), this.orientation!, this.left!, this.top!,
-							this.height!, this.width!, this.numOfCurves!, this.flex!, this.p2d!, this.direction);
-		// if ((Math.floor(Math.random() * MAXSTALKCHANCE)) < (this.stalkChance as number))
-		// {
-		// 	let duration = Math.random() * (this.stalkTimeMax as number) 
-		// 							- (this.stalkTimeMin as number) 
-		// 							+ (this.stalkTimeMin as number);
-		// 	this.stalks.push(new VineStalk(duration, this.timeline, this.stalk, here, this.orientation, this.p2d));
-		// }
+		this.currentPoint = plotSine(this.timeline!.progress(), this.orientation!, this.left!, this.top!,
+							this.height!, this.width!, this.numOfCurves!, this.flex!, this.p2d!, 
+							this.direction, this.startPos!);
+		if ((Math.floor(Math.random() * MAXSTALKCHANCE)) < (this.stalkChance as number))
+		{
+			let duration = Math.random() * (this.stalkTimeMax as number) 
+									- (this.stalkTimeMin as number) 
+									+ (this.stalkTimeMin as number);
+			this.stalks.push(new VineStalk(duration, this.timeline, this.stalk, this.currentPoint, this.orientation, this.p2d));
+		}
 	}
 
 	complete()
 	{
 		this.timeline!.pause();
-		if(this.segmentNum! < (this.numOfSides as number))
+		if(this.segmentNum! < (this.numOfSides as number -1))
 		{
-			this.direction === direction.CCW ? this.orientation = (this.orientation! + 1) % 3
+			this.direction === direction.CCW ? this.orientation = (this.orientation! + 1) % 4
 											: this.orientation = this.orientation! - 1;
 			if (this.orientation < 0) this.orientation = 3;
 			this.timeline = gsap.timeline({duration:this.segmentDuration, 
 										   onUpdate:()=>this.update(),
 										   onComplete:()=>this.complete()});
+			this.startPos = this.currentPoint;
 			this.segmentNum! += 1;
 			this.timeline.play();
 		}

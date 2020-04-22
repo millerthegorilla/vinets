@@ -11,10 +11,10 @@ export enum direction {
 }
 
 export enum vineOrientation {
-	Left = 0,
-	Down,
-	Right,	
+	Right = 0,
 	Up,
+	Left,	
+	Down,
 }
 
 export interface coord {

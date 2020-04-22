@@ -46,7 +46,7 @@ import FlowerBed from './FlowerBed';
 
 	export function plotSine(time:number, orientation:vineOrientation, left:number, 
 		     		  		 top:number, height:number, width:number, numOfCurves:number, 
-		     		  		 flex:number, p2d:Path2D, directn:direction, startPos:coord)
+		     		  		 flex:number, p2d:Path2D, directn:direction, startPos:coord) : coord
 	{
 		let x:number = 0;
 		let y:number = 0;
@@ -56,35 +56,37 @@ import FlowerBed from './FlowerBed';
 		{
 			case vineOrientation.Left:
 			{
-				directn === direction.CCW ? x = left! + width! - (width! * time)
-										  : x = left! + (width! * time);
-				y = flex! * Math.sin((x * Math.PI) / (width! / numOfCurves!)) + top! + flex!;
+				directn === direction.CCW ? x = startPos.x - (width! * time) //implicitly startcorner.Top_Right
+										  : x = startPos.x - (width! * time); // startcorner.Bottom_Right
+				y = (Math.sin((x * Math.PI) / (width! / numOfCurves!)) * flex) + startPos.y - flex;
 				// derived formula using desmos
 				break;
 			}
 			case vineOrientation.Right:
 			{
-				directn === direction.CCW ? x = left! + (width! * time)
-										  : x = left! + width! - (width! * time);
-				y = flex! * Math.sin((x * Math.PI) / (width! / numOfCurves!));
+				directn === direction.CCW ? x = startPos.x + (width! * time) //startcorner.Bottom_Left
+										  : x = startPos.x + (width! * time); //startcorner.Top_Left
+				y = (flex! * Math.sin((x * Math.PI) / (width! / numOfCurves!))) + startPos.y - flex;
 				break;
 			}
 			case vineOrientation.Up:
 			{
-				directn === direction.CCW ? y = startPos.y - (height! * time)
-										  : y = top! + (height! * time);
-				x = flex! * Math.sin((y * Math.PI) / (height! / numOfCurves!)) + startPos.x;
+				console.log("going up");
+				directn === direction.CCW ? y = startPos.y - (height! * time) // startcorner.Bottom_Right
+										  : y = startPos.y - (height! * time); //startcorner.Bottom_Left
+				x = (flex! * Math.sin((y * Math.PI) / (height! / numOfCurves!))) + startPos.x - flex;
 				break;
 			}
 			case vineOrientation.Down:
 			{
-				directn === direction.CCW ? y = top! + (height! * time)
-										  : y = top! + height! - (height! * time);
-				x = flex! * Math.sin((y * Math.PI) / (height! / numOfCurves!));
+				directn === direction.CCW ? y = startPos.y + (height! * time) //startcorner.Top_Left
+										  : y = startPos.y + (height! * time); //startcorner.Top_Right
+				x = (flex! * Math.sin((y * Math.PI) / (height! / numOfCurves!))) + startPos.x - flex;
 				break;
 			}
 
 		}
+		console.log(x + " : " + y);
 		p2d.lineTo(x,y);
 		FlowerBed.ctx.stroke(p2d);
 		return {x:x, y:y};

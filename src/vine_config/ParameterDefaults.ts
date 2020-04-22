@@ -12,13 +12,13 @@ let ParameterDefaults: settings = {
     	left: 100,
         direction: direction.CCW,
         girth: 15,
-        numOfSides: 2,
-        numCurvesPerSide: 2,
+        numOfSides: 4,
+        numCurvesPerSide: 3,
         startCorner: corner.Bottom_Right,
-        height: window.innerHeight + 100,
-        width: window.innerWidth - 210,
-        flex: 100,
-        stalkChance: 50
+        height: 500,
+        width: 500,
+        flex: 40,
+        stalkChance: 10
     },
     stalk: {
         delay: 5,

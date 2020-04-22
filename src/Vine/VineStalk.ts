@@ -1,6 +1,7 @@
 import { coord, vineOrientation, vineBezCalcResult } from '../__types__/vine_types'
 import { stalk } from '../__types__/parameter_types';
 import { plotBezier, calcStalkBezierControlPoints } from './Calculations';
+import gsap from 'gsap';
 
 export default class VineStalk {
 	orientation:vineOrientation;
