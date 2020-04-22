@@ -1,13 +1,13 @@
-import { parameters } from './Parameters';
-import ParameterDefaults from './ParameterDefaults'
-import { settings } from './parameter_types';
+import { parameters } from '../vine_config/Parameters';
+import ParameterDefaults from '../vine_config/ParameterDefaults'
+import { settings } from '../__types__/parameter_types';
 import Vine from './Vine';
 
 export default class FlowerBed {
   public static canv:HTMLCanvasElement;
   public static ctx:CanvasRenderingContext2D;
   public static pattern:CanvasPattern;
-  parameters:Array<settings>;
+  public static parameters:Array<settings>;
   ctx?:CanvasRenderingContext2D;
   image?:HTMLImageElement;
   timeline:any;
@@ -17,12 +17,12 @@ export default class FlowerBed {
   constructor () {
   	this.image = undefined;
     this.ctx = FlowerBed.ctx;
-    this.parameters = new Array<settings>();
+    FlowerBed.parameters = new Array<settings>();
     for(var i of parameters){
       let j:settings = {} as settings;
       Object.assign(j, ParameterDefaults);
       Object.assign(j, i);
-      this.parameters.push(j);
+      FlowerBed.parameters.push(j);
     }
     this.vines = [];
   }
@@ -43,7 +43,7 @@ export default class FlowerBed {
   }
 
   plant() {
-    for(let params of this.parameters)
+    for(let params of FlowerBed.parameters!)
     {
       this.vines.push(new Vine(params))
     }

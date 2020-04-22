@@ -1,6 +1,6 @@
 import React from 'react';
 import './Garden.css';
-import { Html } from './Parameters'; 
+import { Html } from '../vine_config/Parameters'; 
 import FlowerBed from './FlowerBed';
 
 class Garden extends React.Component {

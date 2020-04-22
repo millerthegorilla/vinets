@@ -1,7 +1,8 @@
-import { coord, vineOrientation, vineBezCalcResult } from '../__types__/vine_types';
+import { direction, coord, vineOrientation, vineBezCalcResult } from '../__types__/vine_types';
 import FlowerBed from './FlowerBed';
 
-export namespace Calculations {
+/// could have made a singleton with static accessors to the functions, but namespace is probably sufficiently private,
+/// and I don't think that there are any memory issues
 
 	// the binom and bezier function below is from: 
 	// https://stackoverflow.com/questions/31167663/how-to-code-an-nth-order-bezier-curve/31169371
@@ -34,48 +35,51 @@ export namespace Calculations {
 	}
 
 	export function plotBezier(time:number, controlPoints:Array<vineBezCalcResult>, 
-						girth:number, flowerBed:FlowerBed,
-						p2d:Path2D, segmentNum:number) : coord 
+							   girth:number, p2d:Path2D, segmentNum:number) : coord 
 	{
 		let p = bezier(time, controlPoints[segmentNum].plist);
-		flowerBed.ctx!.lineWidth = girth as number;
+		FlowerBed.ctx!.lineWidth = girth as number;
 		p2d.lineTo(p.x, p.y);
 		FlowerBed.ctx.stroke(p2d);
 		return p;	
 	}
 
 	export function plotSine(time:number, orientation:vineOrientation, left:number, 
-		     		  top:number, height:number, width:number, numOfCurves:number, 
-		     		  flex:number, p2d:Path2D)
+		     		  		 top:number, height:number, width:number, numOfCurves:number, 
+		     		  		 flex:number, p2d:Path2D, directn:direction, startPos:coord)
 	{
 		let x:number = 0;
 		let y:number = 0;
 
+		// refactor this!
 		switch (orientation)
 		{
 			case vineOrientation.Left:
 			{
-				x = left! + width! - (width! * time);
+				directn === direction.CCW ? x = left! + width! - (width! * time)
+										  : x = left! + (width! * time);
 				y = flex! * Math.sin((x * Math.PI) / (width! / numOfCurves!)) + top! + flex!;
-				x += flex! + left!;
 				// derived formula using desmos
 				break;
 			}
 			case vineOrientation.Right:
 			{
-				x = left! + (width! * time);
+				directn === direction.CCW ? x = left! + (width! * time)
+										  : x = left! + width! - (width! * time);
 				y = flex! * Math.sin((x * Math.PI) / (width! / numOfCurves!));
 				break;
 			}
 			case vineOrientation.Up:
 			{
-				y = top! + height! - (height! * time);
-				x = flex! * Math.sin((y * Math.PI) / (height! / numOfCurves!));
+				directn === direction.CCW ? y = startPos.y - (height! * time)
+										  : y = top! + (height! * time);
+				x = flex! * Math.sin((y * Math.PI) / (height! / numOfCurves!)) + startPos.x;
 				break;
 			}
 			case vineOrientation.Down:
 			{
-				y = top! + (height! * time);
+				directn === direction.CCW ? y = top! + (height! * time)
+										  : y = top! + height! - (height! * time);
 				x = flex! * Math.sin((y * Math.PI) / (height! / numOfCurves!));
 				break;
 			}
@@ -85,4 +89,80 @@ export namespace Calculations {
 		FlowerBed.ctx.stroke(p2d);
 		return {x:x, y:y};
 	}
-}
+
+	export function calcStalkBezierControlPoints(orientation:vineOrientation, stalkLengthMax:number,
+												stalkLengthMin:number, stalkNumCurvesMax:number,
+												stalkFlexMax:number, startPos:coord): vineBezCalcResult
+	{
+		//switch vineOrientation
+		let length:number;
+		let plist:Array<coord> = [startPos];
+		let direction:vineOrientation;
+		// could use a ternary but legibility would suffer
+		switch (orientation)
+		{
+			case vineOrientation.Up:
+			case vineOrientation.Down:
+			{
+				direction = Math.round(Math.random());
+				break;
+			}
+			case vineOrientation.Left:
+			case vineOrientation.Right:
+			{
+				direction = Math.round(Math.random() + 2);
+				break;
+			}
+		}
+		length = Math.round(Math.random() * ((stalkLengthMax as number) - (stalkLengthMin as number)) 
+										  + (stalkLengthMin as number));
+		let numOfCurves:number = Math.round(Math.random() * ((stalkNumCurvesMax as number) - 1) + 1);
+		let len:number = length / numOfCurves;
+		let flexmin = () => { return Math.round(Math.random() * ((stalkFlexMax as number) / 2 - 1) + 1)};
+		let flexmax = () => { return Math.round(Math.random() * ((stalkFlexMax as number) - flexmin()) + flexmin())};
+		//let flexmax = () => { return 30 };
+		switch (direction)
+		{
+			case vineOrientation.Up:
+			{
+				for (let i = 1; i <= numOfCurves; i++)
+				{   //try this for the mo.
+					plist.push({x:(i%2 ? startPos.x - flexmax() : startPos.x + flexmax()), y:startPos.y + i * len});
+				}
+				plist.push({x:startPos.x, y:startPos.y + length})
+				break;
+			}
+			case vineOrientation.Down:
+			{
+				for (let i = 1; i <= numOfCurves; i++)
+				{   //try this for the mo.
+					plist.push({x:(i%2 ? startPos.x - flexmax() : startPos.x + flexmax()), y:startPos.y - i * len});
+				}
+				plist.push({x:startPos.x, y:startPos.y - length})
+				break;
+			}
+			case vineOrientation.Left:
+			{
+				for (let i = 1; i <= numOfCurves; i++)
+				{   //try this for the mo.
+					plist.push({x:startPos.x - i * len, y:(i%2 ? startPos.y + flexmax() : startPos.y - flexmax())});
+				}
+				plist.push({x:startPos.x - length, y:startPos.y})
+				break;
+			}
+			case vineOrientation.Right:
+			{
+				for (let i = 1; i <= numOfCurves; i++)
+				{   //try this for the mo.
+					plist.push({x:startPos.x + i * len, y:(i%2 ? startPos.y - flexmax() : startPos.y + flexmax())});
+				}
+				plist.push({x:startPos.x + length, y:startPos.y});
+				break;
+			}
+			default:
+			{
+				throw new Error("eh? stalkOrientation has reached default switch");
+			}
+		}
+		return  {plist, orientation}
+	}

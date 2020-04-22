@@ -1,4 +1,4 @@
-import { settings, html } from './parameter_types';
+import { settings, html } from '../__types__/parameter_types';
 
 // TODO the below should be const, but I use object.assign to push default values in.
 // I should probably use typescript partial or similar

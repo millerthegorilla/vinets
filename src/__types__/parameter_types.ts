@@ -1,3 +1,5 @@
+import { direction, corner } from './vine_types';
+
 export interface html {
         container?: string
         zindex?: number,
@@ -13,12 +15,13 @@ export interface timing {
 
 export interface vine {
         timing?: timing,
+        top?: number,
+        left?: number,
         direction?: direction,
         girth?: number,
         numOfSides?: number,
         numCurvesPerSide?: number,
-        plantAt?: seedPos,
-        startCorner?: cornerPos,
+        startCorner?: corner,
         height?: number,
         width?: number,
         flex?: number,

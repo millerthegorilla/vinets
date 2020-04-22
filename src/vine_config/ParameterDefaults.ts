@@ -1,4 +1,5 @@
-import { direction, settings, corner } from './parameter_types';
+import { direction, corner } from '../__types__/vine_types';
+import { settings } from '../__types__/parameter_types';
 
 let ParameterDefaults: settings = {
     vine: {
@@ -7,12 +8,12 @@ let ParameterDefaults: settings = {
             delay: 1,
             duration: 10
         },
+    	top: 100,
+    	left: 100,
         direction: direction.CCW,
         girth: 15,
         numOfSides: 2,
         numCurvesPerSide: 2,
-        plantAt: {x:window.innerWidth - 200,
-                  y:window.innerHeight - 200 },
         startCorner: corner.Bottom_Right,
         height: window.innerHeight + 100,
         width: window.innerWidth - 210,

@@ -29,8 +29,3 @@ export interface vineBezCalcResult {
 
 export const MAXSTALKCHANCE = 100;
 export const NUM_OF_CP_PER_CURVE = 4;
-export type tRAND = string;
-export const RAND:tRAND = "RAND";
-export type seedPos = coord | tRAND;
-export type cornerPos = corner | tRAND;
-export type shape = number | Error
