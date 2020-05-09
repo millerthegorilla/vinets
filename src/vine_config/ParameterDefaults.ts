@@ -15,8 +15,8 @@ let ParameterDefaults: settings = {
         numOfSides: 4,
         numCurvesPerSide: 3,
         startCorner: corner.Bottom_Right,
-        height: 500,
-        width: 500,
+        height: window.innerHeight - 200,
+        width: window.innerWidth - 200,
         flex: 40,
         stalkChance: 10
     },

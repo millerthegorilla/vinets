@@ -1,11 +1,12 @@
 import gsap from 'gsap';
 import VineStalk from './VineStalk';
-import FLowerBed from './FlowerBed';
+import FlowerBed from './FlowerBed';
 import { MAXSTALKCHANCE, vineOrientation, 
 		 corner, direction, 
 		 coord } from '../__types__/vine_types';
 import { settings, stalk } from '../__types__/parameter_types';
 import { plotSine } from './Calculations';
+
 
 export default class Vine {
 	stalks:Array<VineStalk>;
@@ -59,8 +60,7 @@ export default class Vine {
 									 });
 		this.p2d = new Path2D();
 		this.currentPoint = this.startPos as coord;
-
-		//calculate startpos and orientation
+		
 		switch (parameters.vine!.startCorner)
 		{
 			case corner.Bottom_Left:
@@ -98,7 +98,7 @@ export default class Vine {
 
 	play() 
 	{
-		FLowerBed.ctx.beginPath();
+		FlowerBed.ctx.beginPath();
 		this.timeline!.play();
 	}
 

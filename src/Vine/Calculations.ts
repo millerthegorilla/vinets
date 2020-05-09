@@ -44,29 +44,37 @@ import FlowerBed from './FlowerBed';
 		return p;	
 	}
 
+	/// y = A sin(B(x + C)) + D
+	/// A = Amplitude
+	/// B = 2Pi/n where 2Pi is one full rotation
+	/// C = phase shift, positive is to the left
+	/// D = Vertical shift
+	/// from https://www.mathsisfun.com/algebra/amplitude-period-frequency-phase-shift.html
 	export function plotSine(time:number, orientation:vineOrientation, left:number, 
 		     		  		 top:number, height:number, width:number, numOfCurves:number, 
 		     		  		 flex:number, p2d:Path2D, directn:direction, startPos:coord) : coord
 	{
 		let x:number = 0;
 		let y:number = 0;
+		/// ideally phase would adjust depending on the orientation and the previous orientation or similar,
+		/// but it's close enough for now.
+		let phase:number = (width / numOfCurves) * 2;
 
-		// refactor this!
 		switch (orientation)
 		{
 			case vineOrientation.Left:
 			{
 				directn === direction.CCW ? x = startPos.x - (width! * time) //implicitly startcorner.Top_Right
 										  : x = startPos.x - (width! * time); // startcorner.Bottom_Right
-				y = (Math.sin((x * Math.PI) / (width! / numOfCurves!)) * flex) + startPos.y - flex;
-				// derived formula using desmos
+				y = flex * Math.sin(((2*Math.PI) / ((width / numOfCurves) / 0.5 ))*(x + phase)) + startPos.y;
+				// derived formula using desmos and mathsisfun above
 				break;
 			}
 			case vineOrientation.Right:
 			{
 				directn === direction.CCW ? x = startPos.x + (width! * time) //startcorner.Bottom_Left
 										  : x = startPos.x + (width! * time); //startcorner.Top_Left
-				y = (flex! * Math.sin((x * Math.PI) / (width! / numOfCurves!))) + startPos.y - flex;
+				y = flex * Math.sin(((2*Math.PI) / ((width / numOfCurves) / 0.5))*(x + phase)) + startPos.y;
 				break;
 			}
 			case vineOrientation.Up:
@@ -74,19 +82,18 @@ import FlowerBed from './FlowerBed';
 				console.log("going up");
 				directn === direction.CCW ? y = startPos.y - (height! * time) // startcorner.Bottom_Right
 										  : y = startPos.y - (height! * time); //startcorner.Bottom_Left
-				x = (flex! * Math.sin((y * Math.PI) / (height! / numOfCurves!))) + startPos.x - flex;
+				x = flex * Math.sin(((2*Math.PI) / ((width / numOfCurves) / 0.5))*(y + phase)) + startPos.x;
 				break;
 			}
 			case vineOrientation.Down:
 			{
 				directn === direction.CCW ? y = startPos.y + (height! * time) //startcorner.Top_Left
 										  : y = startPos.y + (height! * time); //startcorner.Top_Right
-				x = (flex! * Math.sin((y * Math.PI) / (height! / numOfCurves!))) + startPos.x - flex;
+				x = flex * Math.sin(((2*Math.PI) / ((width / numOfCurves) / 0.5))*(y + phase)) + startPos.x;
 				break;
 			}
 
 		}
-		console.log(x + " : " + y);
 		p2d.lineTo(x,y);
 		FlowerBed.ctx.stroke(p2d);
 		return {x:x, y:y};
