@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/vinets/static/css/main.b374fc42.chunk.css",
+    "main.js": "/vinets/static/js/main.88d69723.chunk.js",
+    "main.js.map": "/vinets/static/js/main.88d69723.chunk.js.map",
+    "runtime-main.js": "/vinets/static/js/runtime-main.476099ff.js",
+    "runtime-main.js.map": "/vinets/static/js/runtime-main.476099ff.js.map",
+    "static/js/2.d0252c34.chunk.js": "/vinets/static/js/2.d0252c34.chunk.js",
+    "static/js/2.d0252c34.chunk.js.map": "/vinets/static/js/2.d0252c34.chunk.js.map",
+    "index.html": "/vinets/index.html",
+    "precache-manifest.114c42e890172a8c3b71f1187e68df28.js": "/vinets/precache-manifest.114c42e890172a8c3b71f1187e68df28.js",
+    "service-worker.js": "/vinets/service-worker.js",
+    "static/css/main.b374fc42.chunk.css.map": "/vinets/static/css/main.b374fc42.chunk.css.map",
+    "static/js/2.d0252c34.chunk.js.LICENSE.txt": "/vinets/static/js/2.d0252c34.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.476099ff.js",
+    "static/js/2.d0252c34.chunk.js",
+    "static/css/main.b374fc42.chunk.css",
+    "static/js/main.88d69723.chunk.js"
+  ]
+}
