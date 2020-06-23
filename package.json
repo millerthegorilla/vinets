@@ -40,9 +40,13 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-transform-typescript": "^7.9.4",
     "@babel/plugin-proposal-class-properties": "^7.9.4",
+    "@babel/plugin-proposal-decorators": "^7.9.4",
     "@babel/plugin-proposal-private-methods": "^7.9.4",
-    "@babel/plugin-proposal-decorators": "^7.9.4"
-  }
+    "@babel/plugin-transform-typescript": "^7.9.4"
+  },
+  "resolutions": { "**/**/minimist": ">=1.2.3",
+                   "**/**/http-proxy": ">=1.18.1",
+                   "**/**/yargs-parser": ">=18.1.2",
+                   "**/**/websocket-extensions": ">=0.1.4"}
 }
