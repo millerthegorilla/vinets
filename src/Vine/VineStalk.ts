@@ -69,6 +69,6 @@ export default class VineStalk {
 
 	flowerGrown()
 	{
-		console.log("iter = " + this.flower._iterations);
+		//console.log("flowered");
 	}
 }

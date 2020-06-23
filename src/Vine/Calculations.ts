@@ -79,7 +79,6 @@ import FlowerBed from './FlowerBed';
 			}
 			case vineOrientation.Up:
 			{
-				console.log("going up");
 				directn === direction.CCW ? y = startPos.y - (height! * time) // startcorner.Bottom_Right
 										  : y = startPos.y - (height! * time); //startcorner.Bottom_Left
 				x = flex * Math.sin(((2*Math.PI) / ((width / numOfCurves) / 0.5))*(y + phase)) + startPos.x;

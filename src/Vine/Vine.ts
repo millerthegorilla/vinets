@@ -92,7 +92,6 @@ export default class Vine {
 				break;
 			}
 		}
-		console.log("hey " + this.startPos!.x + " : " + this.startPos!.y);
 		if (parameters.vine!.timing!.autoStart as boolean) this.play();
 	}
 
